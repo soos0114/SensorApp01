@@ -9,14 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.sensorapp01.CanvasView;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
+    CanvasView cv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        cv=new CanvasView(this, null);
+        setContentView(cv);
 
         //　端末のセンサーリストを表示
         SensorManager sm = (SensorManager)this.getSystemService(Context.SENSOR_SERVICE);
@@ -25,11 +30,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Log.d("SENSOR","名前は"+s.getName());
         }
 
+        //加速度センサーを設定
+        Sensor ac = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sm.registerListener(this, ac, SensorManager.SENSOR_DELAY_NORMAL);
+
 
     }
 
     @Override
    public void onSensorChanged(SensorEvent sev){
+        Log.d("SENSOR", "Xは"+sev.values[0]+"Yは"+sev.values[1]+"Zは"+sev.values[2]);
     }
     @Override
     public void onAccuracyChanged(Sensor s, int ac){}
